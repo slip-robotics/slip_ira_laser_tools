@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(ira_laser_tools)
+project(slip_ira_laser_tools)
 add_compile_options(-std=c++14)
 
 ## Find catkin macros and libraries
