@@ -16,7 +16,7 @@ Publish a static coordinate transform to tf using an x/y/z offset and quaternion
 	<node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster1" args="0 0 0 0 0.3 0 laser_frame scansx 1000" />
 	<node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster2" args="0 0 0 0 0.0 0 laser_frame scandx 1000" />
 
-	<node pkg="ira_laser_tools" name="laserscan_virtualizer" type="laserscan_virtualizer" output="screen">
+	<node pkg="slip_ira_laser_tools" name="laserscan_virtualizer" type="laserscan_virtualizer" output="screen">
 		<param name="cloud_topic" value="/cloud_in"/>       <!-- INPUT POINT CLOUD -->
 		<param name="base_frame" value="/laser_frame"/>     <!-- REFERENCE FRAME WHICH LASER(s) ARE RELATED-->
 		<param name="output_laser_topic" value ="/scan" />  <!-- VIRTUAL LASER OUTPUT TOPIC, LEAVE VALUE EMPTY TO PUBLISH ON THE VIRTUAL LASER NAMES (param: output_laser_scan) -->

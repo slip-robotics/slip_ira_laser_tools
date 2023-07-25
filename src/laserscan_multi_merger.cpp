@@ -2,7 +2,6 @@
 #include "sensor_msgs/LaserScan.h"
 #include <Eigen/Dense>
 #include <dynamic_reconfigure/server.h>
-#include <ira_laser_tools/laserscan_multi_mergerConfig.h>
 #include <laser_geometry/laser_geometry.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>
@@ -12,6 +11,7 @@
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud_conversion.h>
+#include <slip_ira_laser_tools/laserscan_multi_mergerConfig.h>
 #include <string.h>
 #include <tf/transform_listener.h>
 
