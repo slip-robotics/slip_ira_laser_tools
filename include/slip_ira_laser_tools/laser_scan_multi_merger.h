@@ -40,6 +40,7 @@ private:
   std::vector<std::string> input_topics;
 
   void laserscan_topic_parser();
+  void prettyPrintParams();
 
   double angle_min;
   double angle_max;

@@ -240,6 +240,21 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
   laser_scan_publisher_.publish(output);
 }
 
+void LaserscanMerger::prettyPrintParams()
+{
+  ROS_INFO("LaserScanMerger Parameters:");
+  ROS_INFO("  destination_frame: %s", destination_frame.c_str());
+  ROS_INFO("  cloud_destination_topic: %s", cloud_destination_topic.c_str());
+  ROS_INFO("  scan_destination_topic: %s", scan_destination_topic.c_str());
+  ROS_INFO("  laserscan_topics: %s", laserscan_topics.c_str());
+  ROS_INFO("  angle_min: %f", angle_min);
+  ROS_INFO("  angle_max: %f", angle_max);
+  ROS_INFO("  angle_increment: %f", angle_increment);
+  ROS_INFO("  scan_time: %f", scan_time);
+  ROS_INFO("  range_min: %f", range_min);
+  ROS_INFO("  range_max: %f", range_max);
+}
+
 } // namespace slip_ira_laser_tools
 
 int main(int argc, char** argv)
