@@ -15,8 +15,6 @@ find_package(PCL REQUIRED)
 #   "<command-line>:0:0: warning: missing whitespace after the macro name"
 remove_definitions(-DDISABLE_LIBUSB-1.0)
 
-generate_dynamic_reconfigure_options(cfg/laserscan_multi_merger.cfg cfg/laserscan_virtualizer.cfg)
-
 catkin_package(
    INCLUDE_DIRS
 #  LIBRARIES laser_merger
@@ -24,69 +22,12 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(include
   ${catkin_INCLUDE_DIRS}
   ${EIGEN_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
 )
 
-#add_definitions(${EIGEN_DEFINITIONS})
-
-## Declare a cpp library
-# add_library(laser_merger
-#   src/${PROJECT_NAME}/laser_merger.cpp
-# )
-
-## Declare a cpp executable
-#add_executable(laser_merger_node src/laser_merger_node.cpp)
-#target_link_libraries(laser_merger_node ${catkin_LIBRARIES})
-
 add_executable(laserscan_multi_merger src/laserscan_multi_merger.cpp)
 target_link_libraries(laserscan_multi_merger ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-add_dependencies(laserscan_multi_merger ${PROJECT_NAME}_gencfg)
-
-## Specify libraries to link a library or executable target against
-
-
-#############
-## Install ##
-#############
-
-# all install targets should use catkin DESTINATION variables
-# See http://ros.org/doc/groovy/api/catkin/html/adv_user_guide/variables.html
-
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-## Mark executables and/or libraries for installation
-# install(TARGETS laserscan_multi_merger laserscan_virtualizer
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
-
-## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(DIRECTORY launch/
-  # DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-# )
 
