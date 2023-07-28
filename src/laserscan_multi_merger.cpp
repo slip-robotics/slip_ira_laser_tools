@@ -1,85 +1,19 @@
-#include "pcl_ros/point_cloud.h"
-#include "sensor_msgs/LaserScan.h"
-#include <Eigen/Dense>
-#include <dynamic_reconfigure/server.h>
-#include <laser_geometry/laser_geometry.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl_ros/transforms.h>
-#include <ros/ros.h>
-#include <sensor_msgs/PointCloud.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/point_cloud_conversion.h>
-#include <slip_ira_laser_tools/laserscan_multi_mergerConfig.h>
-#include <string.h>
-#include <tf/transform_listener.h>
+#include <slip_ira_laser_tools/laser_scan_multi_merger.h>
 
-using namespace std;
-using namespace pcl;
-using namespace laserscan_multi_merger;
-
-class LaserscanMerger
+namespace slip_ira_laser_tools
 {
-public:
-  LaserscanMerger();
-  void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan, std::string topic);
-  void pointcloud_to_laserscan(Eigen::MatrixXf points, pcl::PCLPointCloud2* merged_cloud);
-  void reconfigureCallback(laserscan_multi_mergerConfig& config, uint32_t level);
-
-private:
-  ros::NodeHandle node_;
-  laser_geometry::LaserProjection projector_;
-  tf::TransformListener tfListener_;
-
-  ros::Publisher point_cloud_publisher_;
-  ros::Publisher laser_scan_publisher_;
-  vector<ros::Subscriber> scan_subscribers;
-  vector<bool> clouds_modified;
-
-  vector<pcl::PCLPointCloud2> clouds;
-  vector<string> input_topics;
-
-  void laserscan_topic_parser();
-
-  double angle_min;
-  double angle_max;
-  double angle_increment;
-  double time_increment;
-  double scan_time;
-  double range_min;
-  double range_max;
-
-  string destination_frame;
-  string cloud_destination_topic;
-  string scan_destination_topic;
-  string laserscan_topics;
-
-  float very_large_range_{1e6f};
-};
-
-void LaserscanMerger::reconfigureCallback(laserscan_multi_mergerConfig& config, uint32_t level)
-{
-  this->angle_min = config.angle_min;
-  this->angle_max = config.angle_max;
-  this->angle_increment = config.angle_increment;
-  this->time_increment = config.time_increment;
-  this->scan_time = config.scan_time;
-  this->range_min = config.range_min;
-  this->range_max = config.range_max;
-}
 
 void LaserscanMerger::laserscan_topic_parser()
 {
   // LaserScan topics to subscribe
   ros::master::V_TopicInfo topics;
 
-  istringstream iss(laserscan_topics);
-  set<string> tokens;
-  copy(istream_iterator<string>(iss),
-       istream_iterator<string>(),
-       inserter<set<string>>(tokens, tokens.begin()));
-  vector<string> tmp_input_topics;
+  std::istringstream iss(laserscan_topics);
+  std::set<std::string> tokens;
+  std::copy(std::istream_iterator<std::string>(iss),
+            std::istream_iterator<std::string>(),
+            std::inserter<std::set<std::string>>(tokens, tokens.begin()));
+  std::vector<std::string> tmp_input_topics;
 
   while (!tokens.empty())
   {
@@ -97,7 +31,7 @@ void LaserscanMerger::laserscan_topic_parser()
   }
 
   sort(tmp_input_topics.begin(), tmp_input_topics.end());
-  std::vector<string>::iterator last =
+  std::vector<std::string>::iterator last =
       std::unique(tmp_input_topics.begin(), tmp_input_topics.end());
   tmp_input_topics.erase(last, tmp_input_topics.end());
 
@@ -125,7 +59,7 @@ void LaserscanMerger::laserscan_topic_parser()
             1,
             boost::bind(&LaserscanMerger::scanCallback, this, _1, input_topics[i]));
         clouds_modified[i] = false;
-        cout << input_topics[i] << " ";
+        std::cout << input_topics[i] << " ";
       }
     }
     else
@@ -147,6 +81,8 @@ LaserscanMerger::LaserscanMerger()
   nh.param("scan_time", scan_time, 0.0333333);
   nh.param("range_min", range_min, 0.45);
   nh.param("range_max", range_max, 25.0);
+
+  prettyPrintParams();
 
   this->laserscan_topic_parser();
 
@@ -304,18 +240,13 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
   laser_scan_publisher_.publish(output);
 }
 
+} // namespace slip_ira_laser_tools
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "laser_multi_merger");
 
-  LaserscanMerger _laser_merger;
-
-  dynamic_reconfigure::Server<laserscan_multi_mergerConfig> server;
-  dynamic_reconfigure::Server<laserscan_multi_mergerConfig>::CallbackType f;
-
-  f = boost::bind(&LaserscanMerger::reconfigureCallback, &_laser_merger, _1, _2);
-  server.setCallback(f);
-
+  slip_ira_laser_tools::LaserscanMerger _laser_merger;
   ros::spin();
 
   return 0;
