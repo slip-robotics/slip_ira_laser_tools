@@ -215,12 +215,7 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       continue;
     }
 
-    if (!sqrt(range_sq) > this->range_max and
-        !isnan(z)) // potential ground point, ignoring our blown up ranges
-    {
-      z_sum += z;
-      z_count++;
-    }
+    ROS_INFO_THROTTLE(1.0, "Point: (%f, %f, %f)", x, y, z);
 
     double angle = atan2(y, x);
     if (angle < output->angle_min || angle > output->angle_max)
