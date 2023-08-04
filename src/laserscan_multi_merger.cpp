@@ -244,7 +244,7 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       output->ranges[index] = sqrt(range_sq);
   }
 
-  ROS_WARN("Average Z: %f", z_sum / static_cast<float>(z_count));
+  ROS_WARN_THROTTLE(1.0, "Average Z: %f", z_sum / static_cast<float>(z_count));
 
   for (auto& range : output->ranges)
   {
