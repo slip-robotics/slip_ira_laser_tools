@@ -215,7 +215,8 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       continue;
     }
 
-    if (!sqrt(range_sq) > this->range_max) // potential ground point, ignoring our blown up ranges
+    if (!sqrt(range_sq) > this->range_max and
+        !isnan(z)) // potential ground point, ignoring our blown up ranges
     {
       z_sum += z;
       z_count++;
