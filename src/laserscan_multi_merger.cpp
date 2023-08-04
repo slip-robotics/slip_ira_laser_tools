@@ -215,7 +215,12 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       continue;
     }
 
-    ROS_INFO_THROTTLE(1.0, "Point: (%f, %f, %f)", x, y, z);
+    if (sqrt(range_sq) < output->range_max)
+    {
+      z_sum += z;
+      z_count++;
+      ROS_INFO("Point: (%f, %f, %f)", x, y, z);
+    }
 
     double angle = atan2(y, x);
     if (angle < output->angle_min || angle > output->angle_max)
