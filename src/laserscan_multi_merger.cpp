@@ -187,6 +187,9 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       std::ceil((output->angle_max - output->angle_min) / output->angle_increment);
   output->ranges.assign(ranges_size, std::numeric_limits<float>::quiet_NaN());
 
+  float z_sum = 0;
+  int z_count = 0;
+
   for (int i = 0; i < points.cols(); i++)
   {
     const float& x = points(0, i);
@@ -212,10 +215,10 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       continue;
     }
 
-    if (z < 0.10 and
-        !sqrt(range_sq) > this->range_max) // potential ground point, ignoring our blown up ranges
+    if (!sqrt(range_sq) > this->range_max) // potential ground point, ignoring our blown up ranges
     {
-      ROS_WARN("Found potential ground point at (%f, %f, %f)", x, y, z);
+      z_sum += z;
+      z_count++;
     }
 
     double angle = atan2(y, x);
@@ -233,6 +236,8 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
         std::isnan(output->ranges[index]))
       output->ranges[index] = sqrt(range_sq);
   }
+
+  ROS_WARN("Average Z: %f", z_sum / static_cast<float>(z_count));
 
   for (auto& range : output->ranges)
   {
