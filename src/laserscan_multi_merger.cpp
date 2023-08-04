@@ -212,6 +212,12 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points,
       continue;
     }
 
+    if (z < 0.05 and
+        !sqrt(range_sq) > this->range_max) // potential ground point, ignoring our blown up ranges
+    {
+      ROS_WARN("Found potential ground point at (%f, %f, %f)", x, y, z);
+    }
+
     double angle = atan2(y, x);
     if (angle < output->angle_min || angle > output->angle_max)
     {
